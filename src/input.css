@@ -1,0 +1,56 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+@theme {
+    --font-lexend: "Lexend";
+    --font-calsans: "Cal Sans";
+    --font-league: "League Gothic";
+    --color-brand: oklch(0.4079 0.0318 205.02);
+}
+
+.navItem {
+    position: relative;
+    padding: 0 32px 0 32px;
+    display: flex;
+    height: 36px;
+    font-size: var(--text-xs);
+}
+
+.navItem:hover {
+    background-color: var(--color-base-100);
+}
+
+.navItem>span {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-md);
+    padding-left: 16px;
+}
+
+.navActive>span {
+   background-color: var(--color-neutral-100); 
+   width: 100%;
+}
+
+
+.navActive::after {
+    position: absolute;
+    content: "";
+    height: 90%;
+    width: 4px;
+    background-color: var(--color-lime-500);
+    left: 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.navItem:hover::after {
+    position: absolute;
+    content: "";
+    height: 90%;
+    width: 4px;
+    background-color: var(--color-lime-500);
+    left: 0;
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
