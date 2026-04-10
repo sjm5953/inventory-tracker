@@ -1,0 +1,473 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StockBase | Login</title>
+
+    <!--tailwind-->
+    <link href="src/output.css" rel="stylesheet" />
+
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=League+Gothic&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body class="bg-base-100">
+    <div class="min-h-screen font-lexend font-neutral-800 flex">
+      <!--main-->
+      <div class="flex-1 shadow-md flex flex-col min-h-screen">
+        <!--header-->
+        <div class="h-20 flex items-center px-6 lg:px-10">
+          <!--mobile logo-->
+          <div class="flex items-center gap-3 lg:hidden">
+            <div
+              class="bg-linear-to-bl from-lime-300 to-lime-600 text-base-100 size-9 rounded-full flex items-center justify-center"
+            >
+              <i class="fi fi-br-shelves pt-1 text-md"></i>
+            </div>
+            <div>
+              <h1 class="leading-[1rem] font-bold text-md">StockBase</h1>
+              <h2 class="leading-[1rem] opacity-60 text-sm font-light">
+                Login
+              </h2>
+            </div>
+          </div>
+
+          <div class="flex-1"></div>
+
+          <div class="hidden sm:flex gap-2">
+            <a
+              class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
+            >
+              <i class="fi fi-br-comment-alt-dots pt-1"></i>
+            </a>
+            <a
+              class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
+            >
+              <i class="fi fi-br-bell pt-1"></i>
+            </a>
+          </div>
+        </div>
+
+        <!--body-->
+        <div class="flex-1 flex items-center justify-center px-6 py-10">
+          <div class="w-full max-w-7xl grid lg:grid-cols-2 gap-8">
+            <!--left panel-->
+            <div
+              class="rounded-3xl border border-neutral-200 bg-base-100 p-8 lg:p-10 shadow-sm flex flex-col justify-between"
+            >
+              <div>
+                <div
+                  class="inline-flex items-center gap-2 rounded-full bg-lime-100 text-lime-900 px-4 py-2 text-sm font-medium"
+                >
+                  <i class="fi fi-br-boxes pt-1"></i>
+                  Inventory access
+                </div>
+
+                <h1 class="text-4xl lg:text-5xl font-bold mt-6 leading-tight">
+                  Manage stock with a clean, simple workflow.
+                </h1>
+
+                <p class="mt-5 opacity-70 leading-7 max-w-xl">
+                  Sign in to access your dashboard, inventory lists, stock
+                  counts, and supplier information. New users can create an
+                  account below.
+                </p>
+              </div>
+
+              <div class="mt-10 grid sm:grid-cols-3 gap-4">
+                <div class="rounded-2xl bg-neutral-100 p-4">
+                  <div
+                    class="size-10 rounded-xl bg-base-100 flex items-center justify-center mb-3"
+                  >
+                    <i class="fi fi-br-list-check pt-1"></i>
+                  </div>
+                  <h2 class="font-semibold">Track Items</h2>
+                  <p class="text-sm opacity-60 mt-1">
+                    View inventory by name, category, and stock.
+                  </p>
+                </div>
+
+                <div class="rounded-2xl bg-neutral-100 p-4">
+                  <div
+                    class="size-10 rounded-xl bg-base-100 flex items-center justify-center mb-3"
+                  >
+                    <i class="fi fi-br-building pt-1"></i>
+                  </div>
+                  <h2 class="font-semibold">Manage Locations</h2>
+                  <p class="text-sm opacity-60 mt-1">
+                    Organize materials by storage location.
+                  </p>
+                </div>
+
+                <div class="rounded-2xl bg-neutral-100 p-4">
+                  <div
+                    class="size-10 rounded-xl bg-base-100 flex items-center justify-center mb-3"
+                  >
+                    <i class="fi fi-br-user-gear pt-1"></i>
+                  </div>
+                  <h2 class="font-semibold">User Access</h2>
+                  <p class="text-sm opacity-60 mt-1">
+                    Sign in securely with Supabase Auth.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!--auth card-->
+            <div
+              class="rounded-3xl border border-neutral-200 bg-base-100 p-6 sm:p-8 lg:p-10 shadow-sm"
+            >
+              <!--tabs-->
+              <div
+                class="grid grid-cols-2 gap-2 bg-neutral-100 p-1 rounded-2xl"
+              >
+                <button
+                  id="signInTab"
+                  type="button"
+                  class="btn rounded-xl border-0 shadow-none bg-base-100 font-semibold"
+                >
+                  Sign In
+                </button>
+                <button
+                  id="signUpTab"
+                  type="button"
+                  class="btn rounded-xl border-0 shadow-none bg-transparent opacity-60"
+                >
+                  Sign Up
+                </button>
+              </div>
+
+              <!--messages-->
+              <div
+                id="messageBox"
+                class="hidden mt-6 rounded-2xl p-4 text-sm"
+              ></div>
+
+              <!--sign in form-->
+              <form id="signInForm" class="mt-8 space-y-5">
+                <div>
+                  <label class="block text-sm font-medium mb-2">Email</label>
+                  <label class="input rounded-xl w-full">
+                    <i class="fi fi-br-envelope pt-1 opacity-60"></i>
+                    <input
+                      id="signInEmail"
+                      type="email"
+                      class="grow"
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium mb-2">Password</label>
+                  <label class="input rounded-xl w-full">
+                    <i class="fi fi-br-lock pt-1 opacity-60"></i>
+                    <input
+                      id="signInPassword"
+                      type="password"
+                      class="grow"
+                      placeholder="Enter your password"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <button
+                  id="signInBtn"
+                  type="submit"
+                  class="btn rounded-xl bg-lime-400 hover:bg-lime-500 text-neutral-900 border-0 shadow-none w-full"
+                >
+                  Sign In
+                </button>
+
+                <p class="text-sm opacity-60">
+                  Use your confirmed email address and password to access your
+                  account.
+                </p>
+              </form>
+
+              <!--sign up form-->
+              <form id="signUpForm" class="mt-8 space-y-5 hidden">
+                <div>
+                  <label class="block text-sm font-medium mb-2">Email</label>
+                  <label class="input rounded-xl w-full">
+                    <i class="fi fi-br-envelope pt-1 opacity-60"></i>
+                    <input
+                      id="signUpEmail"
+                      type="email"
+                      class="grow"
+                      placeholder="you@example.com"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium mb-2">Password</label>
+                  <label class="input rounded-xl w-full">
+                    <i class="fi fi-br-lock pt-1 opacity-60"></i>
+                    <input
+                      id="signUpPassword"
+                      type="password"
+                      class="grow"
+                      placeholder="Create a password"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <div>
+                  <label class="block text-sm font-medium mb-2"
+                    >Confirm Password</label
+                  >
+                  <label class="input rounded-xl w-full">
+                    <i class="fi fi-br-shield-check pt-1 opacity-60"></i>
+                    <input
+                      id="signUpPasswordConfirm"
+                      type="password"
+                      class="grow"
+                      placeholder="Confirm your password"
+                      required
+                    />
+                  </label>
+                </div>
+
+                <div class="rounded-2xl bg-lime-50 border border-lime-200 p-4">
+                  <p class="text-sm text-lime-900 leading-6">
+                    After signing up, you will need to confirm your email before
+                    you can fully use your account. Check your inbox and spam
+                    folder for the confirmation email.
+                  </p>
+                </div>
+
+                <button
+                  id="signUpBtn"
+                  type="submit"
+                  class="btn rounded-xl bg-lime-400 hover:bg-lime-500 text-neutral-900 border-0 shadow-none w-full"
+                >
+                  Create Account
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const SUPABASE_URL = "https://vzgwjuurlnbthwymudok.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_9z4-7snFdcvhw9mI7jaJKA_o36PHtcr";
+
+      const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY,
+      );
+
+      const signInTab = document.getElementById("signInTab");
+      const signUpTab = document.getElementById("signUpTab");
+      const signInForm = document.getElementById("signInForm");
+      const signUpForm = document.getElementById("signUpForm");
+      const messageBox = document.getElementById("messageBox");
+
+      const signInEmail = document.getElementById("signInEmail");
+      const signInPassword = document.getElementById("signInPassword");
+
+      const signUpEmail = document.getElementById("signUpEmail");
+      const signUpPassword = document.getElementById("signUpPassword");
+      const signUpPasswordConfirm = document.getElementById(
+        "signUpPasswordConfirm",
+      );
+
+      const signInBtn = document.getElementById("signInBtn");
+      const signUpBtn = document.getElementById("signUpBtn");
+
+      function showTab(tab) {
+        const isSignIn = tab === "signin";
+
+        signInForm.classList.toggle("hidden", !isSignIn);
+        signUpForm.classList.toggle("hidden", isSignIn);
+
+        signInTab.className = isSignIn
+          ? "btn rounded-xl border-0 shadow-none bg-base-100 font-semibold"
+          : "btn rounded-xl border-0 shadow-none bg-transparent opacity-60";
+
+        signUpTab.className = !isSignIn
+          ? "btn rounded-xl border-0 shadow-none bg-base-100 font-semibold"
+          : "btn rounded-xl border-0 shadow-none bg-transparent opacity-60";
+
+        clearMessage();
+      }
+
+      function showMessage(type, text) {
+        messageBox.classList.remove(
+          "hidden",
+          "bg-red-50",
+          "border-red-200",
+          "text-red-700",
+          "bg-lime-50",
+          "border-lime-200",
+          "text-lime-900",
+        );
+        messageBox.classList.add("border");
+
+        if (type === "error") {
+          messageBox.classList.add(
+            "bg-red-50",
+            "border-red-200",
+            "text-red-700",
+          );
+        } else {
+          messageBox.classList.add(
+            "bg-lime-50",
+            "border-lime-200",
+            "text-lime-900",
+          );
+        }
+
+        messageBox.textContent = text;
+      }
+
+      function clearMessage() {
+        messageBox.classList.add("hidden");
+        messageBox.textContent = "";
+      }
+
+      function setLoading(button, isLoading, loadingText, defaultText) {
+        button.disabled = isLoading;
+        button.textContent = isLoading ? loadingText : defaultText;
+        button.classList.toggle("opacity-70", isLoading);
+      }
+
+      async function checkExistingSession() {
+        const {
+          data: { session },
+          error,
+        } = await supabaseClient.auth.getSession();
+
+        if (error) {
+          console.error("Session check error:", error);
+          return;
+        }
+
+        if (session) {
+          window.location.href = "index.html";
+        }
+      }
+
+      signInTab.addEventListener("click", () => showTab("signin"));
+      signUpTab.addEventListener("click", () => showTab("signup"));
+
+      signInForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearMessage();
+        setLoading(signInBtn, true, "Signing In...", "Sign In");
+
+        try {
+          const email = signInEmail.value.trim();
+          const password = signInPassword.value;
+
+          const { data, error } = await supabaseClient.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (error) {
+            showMessage("error", error.message);
+            return;
+          }
+
+          if (data.session) {
+            window.location.href = "index.html";
+            return;
+          }
+
+          showMessage(
+            "error",
+            "Sign in was not completed. Please make sure your email is confirmed and try again.",
+          );
+        } catch (err) {
+          console.error(err);
+          showMessage("error", "Something went wrong while signing in.");
+        } finally {
+          setLoading(signInBtn, false, "Signing In...", "Sign In");
+        }
+      });
+
+      signUpForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        clearMessage();
+
+        const email = signUpEmail.value.trim();
+        const password = signUpPassword.value;
+        const confirmPassword = signUpPasswordConfirm.value;
+
+        if (password !== confirmPassword) {
+          showMessage("error", "Passwords do not match.");
+          return;
+        }
+
+        if (password.length < 6) {
+          showMessage("error", "Password must be at least 6 characters long.");
+          return;
+        }
+
+        setLoading(signUpBtn, true, "Creating Account...", "Create Account");
+
+        try {
+          const redirectUrl = `${window.location.origin}${window.location.pathname.replace(/[^/]*$/, "index.html")}`;
+
+          const { error } = await supabaseClient.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: redirectUrl,
+            },
+          });
+
+          if (error) {
+            showMessage("error", error.message);
+            return;
+          }
+
+          signUpForm.reset();
+
+          showMessage(
+            "success",
+            "Account created. Please confirm your email before signing in. Check your inbox and spam folder for the confirmation message.",
+          );
+        } catch (err) {
+          console.error(err);
+          showMessage(
+            "error",
+            "Something went wrong while creating your account.",
+          );
+        } finally {
+          setLoading(signUpBtn, false, "Creating Account...", "Create Account");
+        }
+      });
+
+      supabaseClient.auth.onAuthStateChange((event, session) => {
+        if (event === "SIGNED_IN" && session) {
+          window.location.href = "index.html";
+        }
+      });
+
+      checkExistingSession();
+    </script>
+  </body>
+</html>
