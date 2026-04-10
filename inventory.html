@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Stockbase</title>
+    <!--tailwind-->
+    <link href="src/output.css" rel="stylesheet" />
+    <!--fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=League+Gothic&family=Lexend:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <!--icons-->
+    <link
+      rel="stylesheet"
+      href="https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
+    />
+  </head>
+  <body>
+    <div class="h-screen font-lexend font-neutral-800 flex">
+      <!--sidebar-->
+      <div class="w-70 flex flex-col">
+        <!--logo-->
+        <div class="flex items-center gap-3 h-20 pl-8">
+          <div
+            class="bg-linear-to-bl from-lime-300 to-lime-600 text-base-100 size-9 rounded-full flex items-center justify-center"
+          >
+            <i class="fi fi-br-shelves pt-1 text-md"></i>
+          </div>
+          <div>
+            <h1 class="leading-[1rem] font-bold text-md">StockBase</h1>
+            <h2 class="leading-[1rem] opacity-60 text-sm font-light">Role</h2>
+          </div>
+        </div>
+        <!--menu-->
+        <div class="mt-10 flex-1">
+          <ul class="menu w-full p-0 m-0 space-y-2">
+            <li>
+              <a class="navItem" href="index.html"
+                ><span class="">Dashboard</span></a
+              >
+            </li>
+            <li>
+              <a class="navItem navActive" href="inventory.html"
+                ><span>Inventory</span></a
+              >
+            </li>
+            <li>
+              <a class="navItem" href="orders.html"><span>Orders</span></a>
+            </li>
+          </ul>
+        </div>
+        <!--options-->
+        <div>
+          <ul>
+            <li>
+              <a class="navItem"><span>Help</span></a>
+            </li>
+            <li>
+              <a class="navItem"><span>Settings</span></a>
+            </li>
+          </ul>
+        </div>
+        <div class="divider mx-4 my-2 opacity-60"></div>
+        <!--user-->
+        <div class="mb-10 mt-2">
+          <div class="flex mx-10 gap-2">
+            <div class="avatar avatar-placeholder">
+              <div class="bg-lime-800 text-base-100 size-8 rounded-full">
+                <span class="text-xs">KR</span>
+              </div>
+            </div>
+            <div class="flex flex-col flex-1">
+              <h1 class="font-bold text-sm leading-[1rem]">Username</h1>
+              <h2 class="opacity-60 font-light text-xs leading-[1rem]">
+                email address
+              </h2>
+            </div>
+            <div>
+              <a class="btn btn-square btn-sm rounded-lg"
+                ><i class="fi fi-br-menu-dots pt-1"></i
+              ></a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--main-->
+      <div class="flex-1 shadow-md flex flex-col">
+        <!--header-->
+        <div class="h-20 flex items-center px-10">
+          <!--spacer-->
+          <div class="flex-1"></div>
+          <!--buttons-->
+          <div>
+            <a
+              class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
+              ><i class="fi fi-br-comment-alt-dots pt-1"></i
+            ></a>
+            <a
+              class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
+              ><i class="fi fi-br-bell pt-1"></i
+            ></a>
+          </div>
+        </div>
+        <!--body-->
+        <div class="flex-1 flex flex-col mx-20 mb-10">
+          <h1 class="text-3xl font-bold">Inventory</h1>
+          <!--controls-->
+          <div class="mt-12 flex">
+            <div class="flex-1">
+              <label class="input rounded-lg w-100">
+                <i class="fi fi-br-search pt-1 opacity-60"></i>
+                <input type="search" class="grow" placeholder="Search..." />
+              </label>
+              <a class="btn px-6 rounded-lg text-sm">Filter</a>
+            </div>
+            <div>
+              <a
+                class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
+                ><i class="fi fi-br-menu-dots pt-1 opacity-60"></i
+              ></a>
+              <a class="btn rounded-lg bg-lime-400 w-40 shadow-0 border-0"
+                >+ Add Item</a
+              >
+            </div>
+          </div>
+          <table class="table mt-4 border-b border-neutral-200">
+            <thead>
+              <tr>
+                <th>
+                  <label
+                    ><input
+                      id="checkAll"
+                      type="checkbox"
+                      class="checkbox checkbox-sm rounded-lg"
+                  /></label>
+                </th>
+                <th>Item Name</th>
+                <th>Category</th>
+                <th>In Stock</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>
+                  <label
+                    ><input
+                      type="checkbox"
+                      class="checkbox checkbox-sm rounded-lg"
+                  /></label>
+                </th>
+                <td id="itemName">Item Name</td>
+                <td id="itemCat" class="opacity-60">Category</td>
+                <td>
+                  <div class="flex items-center gap-2">
+                    <span
+                      id="stockNum"
+                      class="bg-neutral-200 rounded-full py-1 px-3"
+                      >200</span
+                    >
+                    <h1 class="opacity-60 text-xs">Unit</h1>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!--footer-->
+          <div class="flex items-center justify-between mt-8">
+            <h1 class="text-sm">
+              Showing: <span id="resultRange" class="font-bold">1 - 10</span> of
+              <span id="resultTotal">100</span>
+            </h1>
+            <!--pagination-->
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1">
+                <a class="btn btn-square rounded-lg bg-base-100 shadow-0"><</a>
+                <a
+                  class="btn btn-square rounded-lg bg-base-100 shadow-0 font-bold"
+                  >1</a
+                >
+                <a
+                  class="btn btn-square rounded-lg bg-base-100 shadow-0 opacity-60"
+                  >2</a
+                >
+                <a class="btn btn-square rounded-lg bg-base-100 shadow-0"
+                  >...</a
+                >
+                <a class="btn btn-square rounded-lg bg-base-100 shadow-0">></a>
+              </div>
+              <select class="select rounded-lg">
+                <option>10/page</option>
+                <option>25/page</option>
+                <option>50/page</option>
+                <option>100/page</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

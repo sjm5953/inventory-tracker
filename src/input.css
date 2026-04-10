@@ -54,3 +54,19 @@
     left: 0;
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
+
+thead {
+    background-color: var(--color-neutral-50);
+}
+
+thead>tr>th {
+    font-weight: bold;
+    font-size: var(--text-xs);
+}
+
+input[type="checkbox"] {
+  color: var(--color-lime-600)
+}
+
+tbody>tr {
+}
