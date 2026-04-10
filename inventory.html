@@ -194,6 +194,67 @@
       </div>
     </div>
 
+    <div
+      id="itemDrawerBackdrop"
+      class="fixed inset-0 bg-black/30 opacity-0 pointer-events-none transition-opacity duration-300 z-40"
+    ></div>
+
+    <aside
+      id="itemDrawer"
+      class="fixed top-0 right-0 h-full w-full sm:w-[420px] bg-base-100 shadow-2xl translate-x-full transition-transform duration-300 z-50 flex flex-col"
+    >
+      <div
+        class="h-20 px-6 border-b border-neutral-200 flex items-center gap-4"
+      >
+        <div class="flex-1 min-w-0">
+          <h2 id="drawerItemName" class="text-xl font-bold truncate">
+            Item Name
+          </h2>
+          <p id="drawerItemCategory" class="text-sm opacity-60">Category</p>
+        </div>
+        <button
+          id="closeDrawerBtn"
+          class="btn btn-square btn-ghost rounded-lg border border-neutral-200 bg-base-100 shadow-none"
+          type="button"
+        >
+          ✕
+        </button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-6 space-y-6">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="rounded-2xl bg-neutral-100 p-4">
+            <p class="text-xs uppercase opacity-50 mb-1">Current Stock</p>
+            <p id="drawerTotalStock" class="text-2xl font-bold">0</p>
+            <p id="drawerUnit" class="text-sm opacity-60">units</p>
+          </div>
+
+          <div class="rounded-2xl bg-neutral-100 p-4">
+            <p class="text-xs uppercase opacity-50 mb-1">Minimum Stock</p>
+            <p id="drawerMinStock" class="text-2xl font-bold">0</p>
+          </div>
+        </div>
+
+        <div class="rounded-2xl border border-neutral-200 p-4">
+          <p class="text-xs uppercase opacity-50 mb-3">Details</p>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between gap-4">
+              <span class="opacity-60">Location</span>
+              <span id="drawerLocation" class="text-right">—</span>
+            </div>
+            <div class="flex justify-between gap-4">
+              <span class="opacity-60">Supplier</span>
+              <span id="drawerSupplier" class="text-right">—</span>
+            </div>
+            <div class="flex justify-between gap-4">
+              <span class="opacity-60">Manager</span>
+              <span id="drawerManager" class="text-right">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
     <script>
       const SUPABASE_URL = "https://vzgwjuurlnbthwymudok.supabase.co";
       const SUPABASE_KEY = "sb_publishable_9z4-7snFdcvhw9mI7jaJKA_o36PHtcr";
@@ -211,6 +272,48 @@
       const searchInput = document.getElementById("searchInput");
       const checkAll = document.getElementById("checkAll");
 
+      const itemDrawer = document.getElementById("itemDrawer");
+      const itemDrawerBackdrop = document.getElementById("itemDrawerBackdrop");
+      const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+
+      const drawerItemName = document.getElementById("drawerItemName");
+      const drawerItemCategory = document.getElementById("drawerItemCategory");
+      const drawerTotalStock = document.getElementById("drawerTotalStock");
+      const drawerUnit = document.getElementById("drawerUnit");
+      const drawerMinStock = document.getElementById("drawerMinStock");
+      const drawerLocation = document.getElementById("drawerLocation");
+      const drawerSupplier = document.getElementById("drawerSupplier");
+      const drawerManager = document.getElementById("drawerManager");
+      const drawerHistory = document.getElementById("drawerHistory");
+
+      function openDrawer(item) {
+        drawerItemName.textContent = item.item_name ?? "Unnamed Item";
+        drawerItemCategory.textContent = item.category ?? "—";
+        drawerTotalStock.textContent = item.total_stock ?? 0;
+        drawerUnit.textContent = item.unit ?? "units";
+        drawerMinStock.textContent = item.min_stock ?? 0;
+        drawerLocation.textContent = item.location ?? "—";
+        drawerSupplier.textContent = item.supplier ?? "—";
+        drawerManager.textContent = item.manager ?? "—";
+
+        itemDrawer.classList.remove("translate-x-full");
+        itemDrawerBackdrop.classList.remove("opacity-0", "pointer-events-none");
+        document.body.classList.add("overflow-hidden");
+      }
+
+      function closeDrawer() {
+        itemDrawer.classList.add("translate-x-full");
+        itemDrawerBackdrop.classList.add("opacity-0", "pointer-events-none");
+        document.body.classList.remove("overflow-hidden");
+      }
+
+      closeDrawerBtn.addEventListener("click", closeDrawer);
+      itemDrawerBackdrop.addEventListener("click", closeDrawer);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") closeDrawer();
+      });
+
       let inventoryData = [];
       let filteredData = [];
       let currentPage = 1;
@@ -219,7 +322,9 @@
       async function loadInventory() {
         const { data, error } = await supabaseClient
           .from("inventory")
-          .select("item_name, category, unit, total_stock")
+          .select(
+            "item_name, category, unit, total_stock, min_stock, location, supplier, manager",
+          )
           .order("item_name", { ascending: true });
 
         if (error) {
@@ -276,33 +381,50 @@
         const pageItems = filteredData.slice(start, end);
 
         tableBody.innerHTML = pageItems
-          .map((item) => {
+          .map((item, index) => {
+            const absoluteIndex = start + index;
+
             return `
-              <tr>
-                <th>
-                  <label>
-                    <input
-                      type="checkbox"
-                      class="row-checkbox checkbox checkbox-sm rounded-lg"
-                    />
-                  </label>
-                </th>
-                <td>${escapeHtml(item.item_name ?? "")}</td>
-                <td class="opacity-60">${escapeHtml(item.category ?? "")}</td>
-                <td>
-                  <div class="flex items-center gap-4">
-                    <span class="bg-neutral-200 rounded-full py-1 px-3">
-                      ${item.total_stock ?? 0}
-                    </span>
-                    <h1 class="opacity-40 text-xs">${escapeHtml(item.unit ?? "")}</h1>
-                  </div>
-                </td>
-              </tr>
-            `;
+      <tr
+        class="cursor-pointer hover:bg-neutral-50 transition-colors"
+        data-index="${absoluteIndex}"
+      >
+        <th>
+          <label>
+            <input
+              type="checkbox"
+              class="row-checkbox checkbox checkbox-sm rounded-lg"
+            />
+          </label>
+        </th>
+        <td>${escapeHtml(item.item_name ?? "")}</td>
+        <td class="opacity-60">${escapeHtml(item.category ?? "")}</td>
+        <td>
+          <div class="flex items-center gap-4">
+            <span class="bg-neutral-200 rounded-full py-1 px-3">
+              ${item.total_stock ?? 0}
+            </span>
+            <h1 class="opacity-40 text-xs">${escapeHtml(item.unit ?? "")}</h1>
+          </div>
+        </td>
+      </tr>
+    `;
           })
           .join("");
 
         syncCheckAllState();
+        tableBody.addEventListener("click", (e) => {
+          if (e.target.closest('input[type="checkbox"]')) return;
+
+          const row = e.target.closest("tr[data-index]");
+          if (!row) return;
+
+          const index = Number(row.dataset.index);
+          const item = filteredData[index];
+          if (!item) return;
+
+          openDrawer(item);
+        });
       }
 
       function renderPagination() {
