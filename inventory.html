@@ -4,8 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Stockbase</title>
+
     <!--tailwind-->
     <link href="src/output.css" rel="stylesheet" />
+
     <!--fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -13,11 +15,15 @@
       href="https://fonts.googleapis.com/css2?family=Cal+Sans&family=League+Gothic&family=Lexend:wght@100..900&display=swap"
       rel="stylesheet"
     />
+
     <!--icons-->
     <link
       rel="stylesheet"
       href="https://cdn-uicons.flaticon.com/4.0.0/uicons-bold-rounded/css/uicons-bold-rounded.css"
     />
+
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <div class="h-screen font-lexend font-neutral-800 flex">
@@ -35,13 +41,12 @@
             <h2 class="leading-[1rem] opacity-60 text-sm font-light">Role</h2>
           </div>
         </div>
+
         <!--menu-->
         <div class="mt-10 flex-1">
           <ul class="menu w-full p-0 m-0 space-y-2">
             <li>
-              <a class="navItem" href="index.html"
-                ><span class="">Dashboard</span></a
-              >
+              <a class="navItem" href="index.html"><span>Dashboard</span></a>
             </li>
             <li>
               <a class="navItem navActive" href="inventory.html"
@@ -53,6 +58,7 @@
             </li>
           </ul>
         </div>
+
         <!--options-->
         <div>
           <ul>
@@ -64,7 +70,9 @@
             </li>
           </ul>
         </div>
+
         <div class="divider mx-4 my-2 opacity-60"></div>
+
         <!--user-->
         <div class="mb-10 mt-2">
           <div class="flex mx-10 gap-2">
@@ -80,126 +88,339 @@
               </h2>
             </div>
             <div>
-              <a class="btn btn-square btn-sm rounded-lg"
-                ><i class="fi fi-br-menu-dots pt-1"></i
-              ></a>
+              <a class="btn btn-square btn-sm rounded-lg">
+                <i class="fi fi-br-menu-dots pt-1"></i>
+              </a>
             </div>
           </div>
         </div>
       </div>
+
       <!--main-->
-      <div class="flex-1 shadow-md flex flex-col">
+      <div class="flex-1 shadow-md flex flex-col h-full min-h-0">
         <!--header-->
         <div class="h-20 flex items-center px-10">
-          <!--spacer-->
           <div class="flex-1"></div>
-          <!--buttons-->
           <div>
             <a
               class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
-              ><i class="fi fi-br-comment-alt-dots pt-1"></i
-            ></a>
+            >
+              <i class="fi fi-br-comment-alt-dots pt-1"></i>
+            </a>
             <a
               class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
-              ><i class="fi fi-br-bell pt-1"></i
-            ></a>
+            >
+              <i class="fi fi-br-bell pt-1"></i>
+            </a>
           </div>
         </div>
+
         <!--body-->
-        <div class="flex-1 flex flex-col mx-20 mb-10">
+        <div class="flex-1 flex flex-col mx-20 mb-10 min-h-0">
           <h1 class="text-3xl font-bold">Inventory</h1>
+
           <!--controls-->
-          <div class="mt-12 flex">
+          <div class="mt-12 flex shrink-0">
             <div class="flex-1">
               <label class="input rounded-lg w-100">
                 <i class="fi fi-br-search pt-1 opacity-60"></i>
-                <input type="search" class="grow" placeholder="Search..." />
+                <input
+                  id="searchInput"
+                  type="search"
+                  class="grow"
+                  placeholder="Search..."
+                />
               </label>
               <a class="btn px-6 rounded-lg text-sm">Filter</a>
             </div>
             <div>
               <a
                 class="btn btn-square btn-ghost border border-neutral-200 rounded-lg bg-base-100 shadow-none"
-                ><i class="fi fi-br-menu-dots pt-1 opacity-60"></i
-              ></a>
-              <a class="btn rounded-lg bg-lime-400 w-40 shadow-0 border-0"
-                >+ Add Item</a
               >
+                <i class="fi fi-br-menu-dots pt-1 opacity-60"></i>
+              </a>
+              <a class="btn rounded-lg bg-lime-400 w-40 shadow-0 border-0">
+                + Add Item
+              </a>
             </div>
           </div>
-          <table class="table mt-4 border-b border-neutral-200">
-            <thead>
-              <tr>
-                <th>
-                  <label
-                    ><input
-                      id="checkAll"
-                      type="checkbox"
-                      class="checkbox checkbox-sm rounded-lg"
-                  /></label>
-                </th>
-                <th>Item Name</th>
-                <th>Category</th>
-                <th>In Stock</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>
-                  <label
-                    ><input
-                      type="checkbox"
-                      class="checkbox checkbox-sm rounded-lg"
-                  /></label>
-                </th>
-                <td id="itemName">Item Name</td>
-                <td id="itemCat" class="opacity-60">Category</td>
-                <td>
-                  <div class="flex items-center gap-2">
-                    <span
-                      id="stockNum"
-                      class="bg-neutral-200 rounded-full py-1 px-3"
-                      >200</span
-                    >
-                    <h1 class="opacity-60 text-xs">Unit</h1>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+          <div
+            class="overflow-y-auto mt-4 flex-1 min-h-0 border-b border-neutral-200"
+          >
+            <table class="table table-pin-rows w-full">
+              <thead>
+                <tr>
+                  <th>
+                    <label>
+                      <input
+                        id="checkAll"
+                        type="checkbox"
+                        class="checkbox checkbox-sm rounded-lg"
+                      />
+                    </label>
+                  </th>
+                  <th>Item Name</th>
+                  <th>Category</th>
+                  <th>In Stock</th>
+                </tr>
+              </thead>
+              <tbody id="inventoryTableBody">
+                <!-- rows inserted by JS -->
+              </tbody>
+            </table>
+          </div>
+
           <!--footer-->
-          <div class="flex items-center justify-between mt-8">
+          <div class="flex items-center justify-between mt-8 shrink-0">
             <h1 class="text-sm">
-              Showing: <span id="resultRange" class="font-bold">1 - 10</span> of
-              <span id="resultTotal">100</span>
+              Showing: <span id="resultRange" class="font-bold">0 - 0</span> of
+              <span id="resultTotal">0</span>
             </h1>
+
             <!--pagination-->
             <div class="flex items-center gap-2">
-              <div class="flex items-center gap-1">
-                <a class="btn btn-square rounded-lg bg-base-100 shadow-0"><</a>
-                <a
-                  class="btn btn-square rounded-lg bg-base-100 shadow-0 font-bold"
-                  >1</a
-                >
-                <a
-                  class="btn btn-square rounded-lg bg-base-100 shadow-0 opacity-60"
-                  >2</a
-                >
-                <a class="btn btn-square rounded-lg bg-base-100 shadow-0"
-                  >...</a
-                >
-                <a class="btn btn-square rounded-lg bg-base-100 shadow-0">></a>
-              </div>
-              <select class="select rounded-lg">
-                <option>10/page</option>
-                <option>25/page</option>
-                <option>50/page</option>
-                <option>100/page</option>
+              <div class="flex items-center gap-1" id="pagination"></div>
+
+              <select id="pageSizeSelect" class="select rounded-lg">
+                <option value="10" selected>10/page</option>
+                <option value="25">25/page</option>
+                <option value="50">50/page</option>
+                <option value="100">100/page</option>
               </select>
             </div>
           </div>
         </div>
       </div>
     </div>
+
+    <script>
+      const SUPABASE_URL = "https://vzgwjuurlnbthwymudok.supabase.co";
+      const SUPABASE_KEY = "sb_publishable_9z4-7snFdcvhw9mI7jaJKA_o36PHtcr";
+
+      const supabaseClient = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY,
+      );
+
+      const tableBody = document.getElementById("inventoryTableBody");
+      const resultRange = document.getElementById("resultRange");
+      const resultTotal = document.getElementById("resultTotal");
+      const pagination = document.getElementById("pagination");
+      const pageSizeSelect = document.getElementById("pageSizeSelect");
+      const searchInput = document.getElementById("searchInput");
+      const checkAll = document.getElementById("checkAll");
+
+      let inventoryData = [];
+      let filteredData = [];
+      let currentPage = 1;
+      let pageSize = Number(pageSizeSelect.value);
+
+      async function loadInventory() {
+        const { data, error } = await supabaseClient
+          .from("inventory")
+          .select("item_name, category, unit, total_stock")
+          .order("item_name", { ascending: true });
+
+        if (error) {
+          console.error("Error loading inventory:", error);
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="4" class="text-center py-6 text-red-600">
+                Failed to load inventory.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        inventoryData = data || [];
+        applyFilters();
+      }
+
+      function applyFilters() {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+
+        filteredData = inventoryData.filter((item) => {
+          const itemName = (item.item_name || "").toLowerCase();
+          const category = (item.category || "").toLowerCase();
+          const unit = (item.unit || "").toLowerCase();
+
+          return (
+            itemName.includes(searchTerm) ||
+            category.includes(searchTerm) ||
+            unit.includes(searchTerm)
+          );
+        });
+
+        currentPage = 1;
+        renderTable();
+        renderPagination();
+        updateShowingText();
+      }
+
+      function renderTable() {
+        if (!filteredData.length) {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="4" class="text-center py-6 opacity-60">
+                No inventory items found.
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const pageItems = filteredData.slice(start, end);
+
+        tableBody.innerHTML = pageItems
+          .map((item) => {
+            return `
+              <tr>
+                <th>
+                  <label>
+                    <input
+                      type="checkbox"
+                      class="row-checkbox checkbox checkbox-sm rounded-lg"
+                    />
+                  </label>
+                </th>
+                <td>${escapeHtml(item.item_name ?? "")}</td>
+                <td class="opacity-60">${escapeHtml(item.category ?? "")}</td>
+                <td>
+                  <div class="flex items-center gap-4">
+                    <span class="bg-neutral-200 rounded-full py-1 px-3">
+                      ${item.total_stock ?? 0}
+                    </span>
+                    <h1 class="opacity-40 text-xs">${escapeHtml(item.unit ?? "")}</h1>
+                  </div>
+                </td>
+              </tr>
+            `;
+          })
+          .join("");
+
+        syncCheckAllState();
+      }
+
+      function renderPagination() {
+        const totalPages = Math.max(
+          1,
+          Math.ceil(filteredData.length / pageSize),
+        );
+        const pageButtons = [];
+
+        pageButtons.push(`
+          <button
+            class="btn btn-square rounded-lg bg-base-100 shadow-0 ${currentPage === 1 ? "opacity-40 pointer-events-none" : ""}"
+            data-page="${currentPage - 1}"
+          >
+            &lt;
+          </button>
+        `);
+
+        for (let i = 1; i <= totalPages; i++) {
+          if (i === 1 || i === totalPages || Math.abs(i - currentPage) <= 1) {
+            pageButtons.push(`
+              <button
+                class="btn btn-square rounded-lg bg-base-100 shadow-0 ${i === currentPage ? "font-bold" : "opacity-60"}"
+                data-page="${i}"
+              >
+                ${i}
+              </button>
+            `);
+          } else {
+            const prev = pageButtons[pageButtons.length - 1];
+            if (!prev.includes("...")) {
+              pageButtons.push(`
+                <button class="btn btn-square rounded-lg bg-base-100 shadow-0 pointer-events-none">
+                  ...
+                </button>
+              `);
+            }
+          }
+        }
+
+        pageButtons.push(`
+          <button
+            class="btn btn-square rounded-lg bg-base-100 shadow-0 ${currentPage === totalPages ? "opacity-40 pointer-events-none" : ""}"
+            data-page="${currentPage + 1}"
+          >
+            &gt;
+          </button>
+        `);
+
+        pagination.innerHTML = pageButtons.join("");
+
+        pagination.querySelectorAll("[data-page]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            currentPage = Number(btn.dataset.page);
+            renderTable();
+            renderPagination();
+            updateShowingText();
+          });
+        });
+      }
+
+      function updateShowingText() {
+        const total = filteredData.length;
+        resultTotal.textContent = total;
+
+        if (total === 0) {
+          resultRange.textContent = "0 - 0";
+          return;
+        }
+
+        const start = (currentPage - 1) * pageSize + 1;
+        const end = Math.min(currentPage * pageSize, total);
+        resultRange.textContent = `${start} - ${end}`;
+      }
+
+      function syncCheckAllState() {
+        const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+
+        checkAll.checked =
+          rowCheckboxes.length > 0 &&
+          [...rowCheckboxes].every((cb) => cb.checked);
+
+        rowCheckboxes.forEach((checkbox) => {
+          checkbox.addEventListener("change", () => {
+            const allChecked =
+              rowCheckboxes.length > 0 &&
+              [...rowCheckboxes].every((cb) => cb.checked);
+            checkAll.checked = allChecked;
+          });
+        });
+      }
+
+      function escapeHtml(value) {
+        return String(value)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      checkAll.addEventListener("change", () => {
+        document.querySelectorAll(".row-checkbox").forEach((checkbox) => {
+          checkbox.checked = checkAll.checked;
+        });
+      });
+
+      pageSizeSelect.addEventListener("change", () => {
+        pageSize = Number(pageSizeSelect.value);
+        currentPage = 1;
+        renderTable();
+        renderPagination();
+        updateShowingText();
+      });
+
+      searchInput.addEventListener("input", applyFilters);
+
+      loadInventory();
+    </script>
   </body>
 </html>

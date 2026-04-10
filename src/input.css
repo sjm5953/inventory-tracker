@@ -55,13 +55,11 @@
     border-radius: 0 var(--radius-md) var(--radius-md) 0;
 }
 
-thead {
-    background-color: var(--color-neutral-50);
-}
 
 thead>tr>th {
     font-weight: bold;
     font-size: var(--text-xs);
+    background-color: var(--color-neutral-50)
 }
 
 input[type="checkbox"] {
