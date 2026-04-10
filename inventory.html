@@ -38,7 +38,12 @@
           </div>
           <div>
             <h1 class="leading-[1rem] font-bold text-md">StockBase</h1>
-            <h2 class="leading-[1rem] opacity-60 text-sm font-light">Role</h2>
+            <h2
+              id="userRole"
+              class="leading-[1rem] opacity-60 text-sm font-light"
+            >
+              Role
+            </h2>
           </div>
         </div>
 
@@ -82,8 +87,13 @@
               </div>
             </div>
             <div class="flex flex-col flex-1">
-              <h1 class="font-bold text-sm leading-[1rem]">Username</h1>
-              <h2 class="opacity-60 font-light text-xs leading-[1rem]">
+              <h1 id="displayName" class="font-bold text-sm leading-[1rem]">
+                Username
+              </h1>
+              <h2
+                id="userEmail"
+                class="opacity-60 font-light text-xs leading-[1rem]"
+              >
                 email address
               </h2>
             </div>
@@ -284,7 +294,10 @@
       const drawerLocation = document.getElementById("drawerLocation");
       const drawerSupplier = document.getElementById("drawerSupplier");
       const drawerManager = document.getElementById("drawerManager");
-      const drawerHistory = document.getElementById("drawerHistory");
+
+      const userEmail = document.getElementById("userEmail");
+      const displayName = document.getElementById("displayName");
+      const userRole = document.getElementById("userRole");
 
       function openDrawer(item) {
         drawerItemName.textContent = item.item_name ?? "Unnamed Item";
@@ -313,6 +326,48 @@
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") closeDrawer();
       });
+
+      async function loadUserProfile() {
+        const {
+          data: { session },
+          error: sessionError,
+        } = await supabaseClient.auth.getSession();
+
+        if (sessionError) {
+          console.error("Error loading auth session:", sessionError);
+          userEmail.textContent = "Not signed in";
+          displayName.textContent = "Guest";
+          userRole.textContent = "No role";
+          return;
+        }
+
+        if (!session?.user) {
+          userEmail.textContent = "Not signed in";
+          displayName.textContent = "Guest";
+          userRole.textContent = "No role";
+          return;
+        }
+
+        const user = session.user;
+
+        userEmail.textContent = user.email ?? "No email";
+
+        const { data: profile, error: profileError } = await supabaseClient
+          .from("user_details")
+          .select("display_name, role")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (profileError) {
+          console.error("Error loading user details:", profileError);
+          displayName.textContent = user.email ?? "User";
+          userRole.textContent = "No role";
+          return;
+        }
+
+        displayName.textContent = profile?.display_name || user.email || "User";
+        userRole.textContent = profile?.role || "No role";
+      }
 
       let inventoryData = [];
       let filteredData = [];
@@ -413,18 +468,6 @@
           .join("");
 
         syncCheckAllState();
-        tableBody.addEventListener("click", (e) => {
-          if (e.target.closest('input[type="checkbox"]')) return;
-
-          const row = e.target.closest("tr[data-index]");
-          if (!row) return;
-
-          const index = Number(row.dataset.index);
-          const item = filteredData[index];
-          if (!item) return;
-
-          openDrawer(item);
-        });
       }
 
       function renderPagination() {
@@ -526,6 +569,19 @@
           .replace(/'/g, "&#039;");
       }
 
+      tableBody.addEventListener("click", (e) => {
+        if (e.target.closest('input[type="checkbox"]')) return;
+
+        const row = e.target.closest("tr[data-index]");
+        if (!row) return;
+
+        const index = Number(row.dataset.index);
+        const item = filteredData[index];
+        if (!item) return;
+
+        openDrawer(item);
+      });
+
       checkAll.addEventListener("change", () => {
         document.querySelectorAll(".row-checkbox").forEach((checkbox) => {
           checkbox.checked = checkAll.checked;
@@ -542,6 +598,7 @@
 
       searchInput.addEventListener("input", applyFilters);
 
+      loadUserProfile();
       loadInventory();
     </script>
   </body>
