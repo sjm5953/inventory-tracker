@@ -152,6 +152,7 @@
               <a class="btn rounded-lg bg-lime-400 w-40 shadow-0 border-0">
                 + Add Item
               </a>
+              <a class="btn rounded-lg bg-base-100 w-40 shadow-0 border border-lime-400">Do Inventory</a>
             </div>
           </div>
 
@@ -349,6 +350,7 @@
         }
 
         const user = session.user;
+        console.log("Current user ID:", user.id);
 
         userEmail.textContent = user.email ?? "No email";
 
@@ -358,6 +360,8 @@
           .eq("user_id", user.id)
           .maybeSingle();
 
+        console.log("Profile query result:", { profile, profileError });
+
         if (profileError) {
           console.error("Error loading user details:", profileError);
           displayName.textContent = user.email ?? "User";
@@ -365,8 +369,15 @@
           return;
         }
 
-        displayName.textContent = profile?.display_name || user.email || "User";
-        userRole.textContent = profile?.role || "No role";
+        if (!profile) {
+          console.warn("No user_details record found for user:", user.id);
+          displayName.textContent = user.email ?? "User";
+          userRole.textContent = "No role";
+          return;
+        }
+
+        displayName.textContent = profile.display_name || user.email || "User";
+        userRole.textContent = profile.role || "No role";
       }
 
       let inventoryData = [];
